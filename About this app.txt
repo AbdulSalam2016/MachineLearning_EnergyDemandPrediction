@@ -1,0 +1,34 @@
+Title: Energy Demand and Supply Prediction App
+Developer: Dr. Yakubu Abdul-Salam, Associate Professor of Economics, University of Aberdeen, UK
+
+Purpose: 
+This tool predicts the net supply of electricity for a fictional jurisdiction. 
+
+Instructions:
+From the sidebar, input your desired input parameters. These will then be passed to the trained MLP Neural Network model in the background for analysis and prediction.
+
+Description:
+As data was not readily available in the timespace I had for this project, fictional hourly electricity demand and supply, along with relevant temporal, weather and economic indicators, were generated for 4 years for a fictional example jurisdiction, culminating into 8760*4 = 35,040 observations. Reasonable assumptions were made in the generation of the fictional dataset, including for example that;
+
+1. Demand will be higher during daytime and peak in summer due to cooling needs.
+2. Supply from solar will be higher during sunny hours and in summer.
+3. Supply from wind will vary and is not directly correlated with temperature.
+4. Temperature will follow a typical seasonal pattern with added random noise.
+
+The generated fictional data was then used to train, validate and test several supervised machine learning models using the following regression specification;
+
+net_supply(t) = beta0 + beta1*temperature(t) + beta2*temperature_squared(t) + beta3*sunlight_hours(t) + beta4*economic_indicator(t) + beta_february*month_february(t) + ... + beta_december*month_december(t) + beta_tuesday*day_tuesday(t) + ... + beta_sunday*day_sunday(t) + beta_hour2*Hour_2(t) + ... + beta_hour24*Hour_24(t) + beta_summer*season_summer(t) + beta_autumn*season_autumn(t) + beta_winter*season_winter(t) + beta_Holiday*Holiday(t)
+
+In the above model specification;
+1. Net supply is the dependent variable, and is the difference between supply and demand for electricity
+2. Temperature is the temperature in degrees celsius. An additional term for temperature is incorporated to account for non-linearities in the effect of temperature on net supply. This is well established in the literature.
+3. Sunlight hours reflects the number of daylight hours, which peaks in summer. It influences both the demand (less heating required during more sunlight hours) and solar electricity supply.
+4. Economic indicator captures macroeconomic influences on electricity demand and supply. A good proxy is industrial production index for example.
+5. Temporal variables 'Month', 'Day', 'Hour', meteorological 'Seasons' and 'Holiday' are dummy variables taking values of 0 and 1 accordingly. Reference temporal variables (e.g. month_january) have been dropped from the model to prevent perfect collinearity.
+
+The best model was found to be the MLP Neural Network estimator. This was then further refined using a grid search hyperparameter tuning approach. The final model is what is being used for prediction in this web application. When a user specifies input parameters on the left, the parameters are passed to the MLP Neural Network estimator for prediction.
+
+
+
+
+
